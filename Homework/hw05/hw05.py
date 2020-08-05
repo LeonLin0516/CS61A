@@ -251,8 +251,16 @@ def totals_tree(m):
           2
     """
     "*** YOUR CODE HERE ***"
+    if is_mobile(m):
+        root = total_weight(m)
+        branches = []
+        left_side = end(left(m))
+        right_side = end(right(m))
+        branches.append(totals_tree(left_side))
+        branches.append(totals_tree(right_side))
+        return tree(root, branches)
+    return tree(size(m))
     
-
 # Mutable functions in Python
 
 def make_counter():
@@ -276,6 +284,14 @@ def make_counter():
     5
     """
     "*** YOUR CODE HERE ***"
+    string_dictionary = dict()
+    def counter(string: str)->int:
+        nonlocal string_dictionary
+        if string not in string_dictionary.keys():
+            string_dictionary[string] = 0
+        string_dictionary[string] = string_dictionary[string] + 1
+        return string_dictionary.get(string)
+    return counter
 
 def make_fib():
     """Returns a function that returns the next Fibonacci number
@@ -297,6 +313,16 @@ def make_fib():
     12
     """
     "*** YOUR CODE HERE ***"
+    previous = 1
+    curr = 0
+    def fib():
+        nonlocal previous
+        nonlocal curr
+        temp = curr
+        curr = curr + previous
+        previous = temp
+        return previous
+    return fib
 
 def make_withdraw(balance, password):
     """Return a password-protected withdraw function.
@@ -327,6 +353,22 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+    attempts = []
+    def withdraw(amount, p):
+        nonlocal balance
+        nonlocal password
+        nonlocal attempts
+        if len(attempts) >= 3:
+                return 'Your account is locked. Attempts: [\'{p1}\', \'{p2}\', \'{p3}\']'.format(p1 = attempts[0], p2 = attempts[1], p3 = attempts[2])
+        if p != password:
+            attempts.append(p)
+            return 'Incorrect password'
+        else:
+            if balance < amount:
+                return 'Insufficient funds'
+            balance = balance - amount
+            return balance
+    return withdraw
 
 def make_joint(withdraw, old_password, new_password):
     """Return a password-protected withdraw function that has joint access to
